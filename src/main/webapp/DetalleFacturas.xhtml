@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Analytics Dashboard</title>
+        <h:outputStylesheet name="dashboard.css" />
+        <style type="text/css">
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                background-color: #f4f6f8;
+            }
+            /* --- Estilos para la Tabla de Productos --- */
+
+            .product-list-container {
+                padding: 20px;
+                background-color: var(--bg-white);
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+                margin-top: 30px;
+            }
+
+            .product-list-container h2 {
+                margin-bottom: 25px;
+                color: var(--text-dark);
+                font-size: 22px;
+            }
+
+            .product-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px;
+            }
+
+            .table-header {
+                background-color: var(--primary-blue);
+                color: white;
+                text-align: left;
+                font-weight: 600;
+            }
+
+            .product-table th{
+                padding: 12px 15px;
+                border: 1px solid #ddd;
+                background-color: #007bff;
+                color: white;
+                text-align: left;
+            }
+            .product-table td {
+                padding: 12px 15px;
+                border: 1px solid #ddd;
+
+            }
+
+            .table-row-odd {
+                background-color: #f9f9f9;
+            }
+
+            .table-row-even {
+                background-color: var(--bg-white);
+            }
+
+            .product-table tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            /* Estilos para las acciones */
+            .actions-column {
+                text-align: center;
+                width: 120px;
+            }
+
+            .action-link {
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+            .action-link.edit {
+                color: var(--primary-blue);
+            }
+
+            .action-link.delete {
+                color: var(--danger-color);
+            }
+
+            .no-data-message {
+                color: var(--text-muted);
+                padding: 15px;
+                background-color: #f0f0f0;
+                border-radius: 5px;
+                text-align: center;
+            }
+
+            .container {
+                display: flex;
+                height: 100vh;
+            }
+
+            .sidebar {
+                width: 220px;
+                background-color: #2f3e4d;
+                color: white;
+                padding: 20px;
+            }
+
+            .sidebar h2 {
+                font-size: 14px;
+                margin-bottom: 10px;
+                color: #aaa;
+            }
+
+            .sidebar ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .sidebar li {
+                padding: 10px 0;
+                cursor: pointer;
+            }
+
+            .sidebar li.active {
+                font-weight: bold;
+                color: #00d4a7;
+            }
+
+            .dashboard {
+                flex: 1;
+                padding: 30px;
+            }
+
+            .topbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+
+            .user-profile {
+                display: flex;
+                align-items: center;
+            }
+
+            .user-profile img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+
+            .create-button {
+                background-color: #00d4a7;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .stats {
+                display: flex;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+
+            .card {
+                flex: 1;
+                padding: 20px;
+                border-radius: 8px;
+                color: white;
+            }
+
+            .card h3 {
+                margin: 0 0 10px;
+            }
+
+            .card .value {
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            .card .change {
+                font-size: 14px;
+            }
+
+            .card.red {
+                background-color: #e74c3c;
+            }
+
+            .card.orange {
+                background-color: #f39c12;
+            }
+
+            .card.green {
+                background-color: #2ecc71;
+            }
+
+            .change.down {
+                color: #fdd;
+            }
+
+            .change.up {
+                color: #dff;
+            }
+
+            .report-button {
+                background-color: #3498db;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            /* --- Estilos para Texto Blanco y Efecto Hover Verde Limón --- */
+
+            /* 1. Define la clase que usarás en tu XHTML */
+            .texto-blanco-hover-limon {
+                /* Color del texto por defecto */
+                color: white;
+
+                /* Asegura una transición suave al cambiar de color */
+                transition: color 0.3s ease;
+
+                /* Opcional: Remueve el subrayado de los enlaces si lo usas */
+                text-decoration: none;
+            }
+
+            /* 2. Define el estado HOVER (cuando el mouse está encima) */
+            .texto-blanco-hover-limon:hover {
+                /* El color verde limón */
+                color: #ccff00; /* Un verde amarillo brillante */
+
+                /* Opcional: Cambia el cursor para indicar que es interactivo */
+                cursor: pointer;
+            }
+
+            /* --- Ejemplos de uso en otros elementos --- */
+
+            /* Para enlaces dentro de tu navegación lateral */
+            .main-nav a {
+                color: white; /* Color base */
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            .main-nav a:hover {
+                color: #ccff00; /* Verde limón al pasar el mouse */
+            }
+            /* Estilos para el div del formulario de registro de productos */
+            .product-registration-form {
+                background-color: var(--bg-white);
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                max-width: 600px; /* Limita el ancho del formulario */
+                margin: 30px auto; /* Centra el formulario */
+            }
+
+            .product-registration-form h2 {
+                color: var(--primary-color);
+                margin-bottom: 25px;
+                font-size: 24px;
+                font-weight: 600;
+                text-align: center;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 500;
+                color: var(--text-dark);
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ced4da;
+                border-radius: 5px;
+                font-size: 16px;
+                color: var(--text-dark);
+                transition: border-color 0.2s, box-shadow 0.2s;
+            }
+
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                outline: none;
+            }
+
+            textarea.form-control {
+                resize: vertical; /* Permite redimensionar verticalmente */
+                min-height: 80px;
+            }
+
+            .form-actions {
+                margin-top: 30px;
+                text-align: right;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
+
+            .btn-primary {
+                background-color: var(--primary-color);
+                color: white;
+                border: 1px solid var(--primary-color);
+            }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+
+            .error-message {
+                color: var(--danger-color);
+                font-size: 13px;
+                margin-top: 5px;
+                display: block; /* Asegura que el mensaje de error esté en su propia línea */
+            }
+
+            .info-message {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .product-registration-form {
+                /* Color de fondo gris (puedes ajustar el valor) */
+                background-color: #f8f9fa; /* Un gris muy claro, casi blanco */
+                /* background-color: #e9ecef;  Un gris un poco más oscuro si lo prefieres */
+
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                max-width: 600px; /* Limita el ancho del formulario */
+                margin: 30px auto; /* Centra el formulario */
+            }
+
+
+        </style>
+    </h:head>
+    <h:body>
+        <div class="container">
+            <aside class="sidebar">
+                <h2>MAIN NAVIGATION</h2>
+                <ul>
+                    <li ><h:link outcome="dashboard" value="Inicio" styleClass="texto-blanco-hover-limon"/></li>
+                    <li>
+                        <h:link outcome="RegistrarProductos" value="Registrar Productos" styleClass="texto-blanco-hover-limon"/>
+                    </li>
+                    <li>
+                        <h:link outcome="ListaProductos" value="Lista Productos" styleClass="texto-blanco-hover-limon"/>
+                    </li>
+                    <li>
+                        <h:link outcome="Ventas" value="Nueva Venta" styleClass="texto-blanco-hover-limon"/>
+                    </li>
+                    <li> <h:link outcome="Clientes" value="Registrar Clientes" styleClass="texto-blanco-hover-limon"/></li>
+                    <li> <h:link outcome="ListaClientes" value="Lista clientes" styleClass="texto-blanco-hover-limon"/></li>
+                    <li class="active"> Detalle facturas</li>
+
+                </ul>
+           
+            </aside>
+
+            <main class="dashboard">
+                <header class="topbar">
+                    <div class="user-profile">
+                        <img src="user.png" alt="Alina Mclourd" />
+                        <div>
+                            <strong>Alina Mclourd</strong><br />
+                            <span>VP People Manager</span>
+                        </div>
+                    </div>
+                    <h:commandButton value="+ Create New" styleClass="create-button" />
+                </header>
+                <!-- Tabla de productos registrados -->
+                <h:form id="formPrincipal">
+
+                    <div class="product-list-container">
+                        <h2>Lista de facturas</h2>
+
+                        <h:panelGroup rendered="#{empty ventaController.listaventas}">
+                            <p class="no-data-message">Aún no hay ventas registrados. ¡Comienza a agregar algunas!</p>
+                        </h:panelGroup>
+
+                        <h:dataTable value="#{ventaController.listaventas}" 
+                                     var="v" 
+                                     rendered="#{not empty ventaController.listaventas}"
+                                     styleClass="product-table" 
+                                     headerClass="table-header" 
+                                     rowClasses="table-row-odd, table-row-even">
+
+                            <h:column>
+                                <f:facet name="header">ID</f:facet>
+                                <h:outputText value="#{v.id_venta}" /> 
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Fecha venta</f:facet>
+                                <h:outputText value="#{v.fecha_venta}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>    
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">nombre cliente</f:facet>
+                                <h:outputText value="#{v.id_cliente.nombre}" />
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Total de ventas</f:facet>
+                                <h:outputText value="#{v.total}" />
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Accion</f:facet>
+                                <p:commandButton 
+                                                 icon="pi pi-eye" 
+                                                 action="#{ventaController.prepararDetalle(v.id_venta)}" 
+                                                 ajax="false" 
+                                                 styleClass="ui-button-info" />
+                            </h:column>
+                        </h:dataTable>
+                    </div>
+                </h:form>
+
+
+            </main>
+        </div>
+
+
+
+        <!-- Diálogo para editar cliente -->
+        <p:dialog header="Editar Cliente" widgetVar="dialogEditar" modal="true" resizable="false" closable="true">
+            <h:form id="formEditar">
+                <h:panelGrid columns="2" cellpadding="5">
+
+                    <h:outputLabel for="nom_producto" value="Nombre : " />
+                    <p:inputText id="nombre_Sele" value="#{ventaController.detalleSeleccionado.producto.producto}" required="true" disabled="true" />
+                    <h:outputLabel for="cantidad" value="cantidad : " />
+                    <p:inputText id="cantidadSel" value="#{ventaController.detalleSeleccionado.cantidad}" required="true" />
+                    <h:outputLabel for="precio_unitario" value="precio unitario" />
+                    <p:inputText id="precio_unitarioSele" value="#{ventaController.detalleSeleccionado.precio_unitario}" required="true" disabled="true" />
+                    <h:outputLabel for="subtotal" value="subtotal : " />
+                    <p:inputText id="subtotalSele" value="#{ventaController.detalleSeleccionado.subtotal}" required="true" disabled="true"/>
+
+                </h:panelGrid>
+
+                <p:commandButton value="Guardar cambios"
+                                 action="#{ManagerClientes.editarClientes()}"
+                                 update="formPrincipal"
+                                 oncomplete="PF('dialogEditar').hide()" />
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>

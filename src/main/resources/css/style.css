@@ -1,0 +1,189 @@
+/*
+ * Archivo: style.css
+ * Ubicación asumida: ../resources/shared/css/style.css
+ */
+
+/* --- Variables de Color --- */
+:root {
+    --dark-bg: #101017;
+    --card-bg: #1e1e2d;
+    --text-color: #f0f0f0;
+    --placeholder-color: #888;
+    --input-bg: #2b2b3e;
+    --accent-light: #50ff9d; /* Verde/Cian para el gradiente */
+    --accent-dark: #00e0ff; /* Azul para el gradiente */
+    --link-color: #00c7e0;
+}
+
+/* --- Estilos Globales y Fondo Oscuro --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Ocultar etiquetas para el diseño (accesibilidad) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* --- Tarjeta de Login (login-card) --- */
+.login-card {
+    width: 380px;
+    padding: 40px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Sombra suave */
+    text-align: center;
+}
+
+/* --- Encabezado --- */
+.login-header {
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+    /* Estilo del rayo */
+    color: var(--accent-light); 
+    text-shadow: 0 0 10px var(--accent-light); /* Efecto neón suave */
+}
+
+.login-header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.login-header p {
+    color: #b0b0c2;
+    font-size: 14px;
+}
+
+/* --- Formulario y Campos --- */
+.login-form {
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px 50px 15px 15px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-bg);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-light); /* Línea de enfoque neón */
+}
+
+.form-group input::placeholder {
+    color: var(--placeholder-color);
+}
+
+.password-group {
+    margin-bottom: 15px; /* Reducir margen para acercar a opciones */
+}
+
+/* Botón de alternar contraseña (el icono del ojo) */
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.eye-icon {
+    /* Representación simple del icono del ojo */
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: var(--placeholder-color);
+    border-radius: 50%;
+    position: relative;
+}
+
+/* --- Opciones (Remember me / Forgot password) --- */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 30px;
+    color: var(--placeholder-color);
+}
+
+.remember-me-label input[type="checkbox"] {
+    /* Estilado avanzado para checkboxes requeriría más CSS, usamos el nativo */
+    margin-right: 5px;
+}
+
+.forgot-password {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.forgot-password:hover {
+    color: var(--accent-light);
+}
+
+/* --- Botón de Sign In (El Gradiente Neón) --- */
+.login-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    /* Gradiente del botón tal como se ve en la imagen */
+    background-image: linear-gradient(to right, var(--accent-light), var(--accent-dark));
+    box-shadow: 0 4px 15px rgba(0, 224, 255, 0.4); /* Sombra para efecto neón */
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 20px rgba(0, 224, 255, 0.6); /* Sombra más intensa al pasar el ratón */
+}
+
+/* --- Divisor --- */
+.auth-divider {
+    text-align: center;
+    color: var(--placeholder-color);
+    font-size: 12px;
+    margin: 25px 0 0;
+}

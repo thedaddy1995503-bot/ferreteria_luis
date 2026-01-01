@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="primefaces">
+
+    <f:metadata>
+        <f:viewParam name="idVenta" value="#{ventaController.idVentaSeleccionada}" />
+        <f:viewAction action="#{ventaController.cargarListaDesdeUrl()}" />
+    </f:metadata>
+    <h:head>
+        <title>Analytics Dashboard</title>
+        <h:outputStylesheet name="dashboard.css" />
+        <style type="text/css">
+
+            /* --- Variables y Estilos Base --- */
+
+            .container {
+                padding: 20px;
+            }
+
+            .split-layout {
+                display: flex;
+                gap: 30px;
+            }
+
+            .product-search-panel,
+            .client-search-panel,
+            .invoice-summary-panel {
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                flex: 1;
+            }
+
+            /* Contenedor principal */
+            .detalle-container {
+                padding: 20px;
+                background-color: #f8f9fa;
+                border-radius: 10px;
+            }
+
+            /* Estilo personalizado para la DataTable de PrimeFaces */
+            .tabla-detalles.ui-datatable {
+                border: none;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            }
+
+            .tabla-detalles .ui-datatable-header {
+                background: #2c3e50 !important;
+                color: white !important;
+                text-align: left;
+                padding: 15px;
+                font-size: 1.2em;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+            }
+
+            .tabla-detalles thead th {
+                background-color: #f1f4f8 !important;
+                color: #34495e !important;
+                font-weight: bold !important;
+                padding: 12px !important;
+                border: none !important;
+            }
+
+            .tabla-detalles tbody td {
+                padding: 12px !important;
+                border-bottom: 1px solid #edf2f7 !important;
+            }
+
+            /* Efecto Hover en las filas */
+            .tabla-detalles .ui-datatable-data tr:hover {
+                background-color: #f8fbff !important;
+                transition: background-color 0.3s ease;
+            }
+
+            /* Estilo para los totales */
+            .panel-totales {
+                margin-top: 20px;
+                padding: 15px;
+                background: white;
+                border-radius: 8px;
+                border-left: 5px solid #2ecc71;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+            }
+
+            .total-label {
+                font-size: 1.1em;
+                color: #7f8c8d;
+                margin-right: 15px;
+            }
+
+            .total-monto {
+                font-size: 1.5em;
+                font-weight: bold;
+                color: #2c3e50;
+            }
+
+
+        </style>
+    </h:head>
+    <h:body>
+        <div class="detalle-container">
+            <h:form id="formDetalle">
+
+                <p:dataTable id="tabla" value="#{ventaController.listaDetalleVentas}" 
+                             var="item" styleClass="tabla-detalles"
+                             emptyMessage="No se encontraron productos para esta venta.">
+
+                    <f:facet name="header">
+                        Listado de Productos - Venta # #{ventaController.idVentaSeleccionada}  #{ventaController.ventaCabecera.id_cliente.nombre}
+                    </f:facet>
+
+                    <p:column headerText="ID Registro">
+                        <h:outputText value="#{item.venta.id_venta}" />
+                    </p:column>
+
+                    <p:column headerText="Producto">
+                        <h:outputText value="#{item.producto.nom_producto}" />
+                    </p:column>
+
+                    <p:column headerText="Cantidad" style="text-align: center;">
+                        <h:outputText value="#{item.cantidad}" />
+                    </p:column>
+                    <p:column headerText="cliente">
+                        <h:outputText value="#{item.venta.id_cliente.nombre}" style="font-weight: bold;"/>
+                    </p:column>
+
+                    <p:column headerText="Precio Unitario">
+                        <h:outputText value="#{item.precio_unitario}">
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Subtotal">
+                        <h:outputText value="#{item.subtotal}" style="font-weight: bold;">
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Accion</f:facet>
+
+                        <p:commandLink value="✏️"
+                                       action="#{ventaController.prepararEdicion(item.id_detalle,item.cantidad)}"
+                                       oncomplete="PF('dialogEditar').show()"
+                                       update="formEditar"
+                                       title="Editar Productos" />
+                    </p:column>
+
+                </p:dataTable>
+
+                <div class="panel-totales">
+                    <span class="total-label">TOTAL GENERAL:</span>
+                    <span class="total-monto">
+                        <h:outputText value="#{ventaController.ventaCabecera.total}">
+                            <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="2" maxFractionDigits="2" />
+                        </h:outputText>
+                    </span>
+                </div>
+
+                <p:spacer height="20" />
+
+                <p:commandButton value="Volver" 
+                                 action="DetalleFacturas?faces-redirect=true" 
+                                 ajax="false" 
+                                 immediate="true"
+                                 icon="pi pi-chevron-left" />
+            </h:form>
+        </div>
+
+        <!-- Diálogo para editar detalle ventas -->
+        <p:dialog header="Editar Cliente" widgetVar="dialogEditar" modal="true" resizable="false" closable="true">
+            <h:form id="formEditar">
+                <h:panelGrid columns="2" cellpadding="5">
+
+                    <h:outputLabel for="nom_producto" value="Nombre : " />
+                    <p:inputText id="nombre_Sele" value="#{ventaController.detalleSeleccionado.producto.nom_producto}" required="true" readonly="true" />
+                    <h:outputLabel for="cantidad" value="cantidad : " />
+                    <p:inputText id="cantidadSel" value="#{ventaController.detalleSeleccionado.cantidad}" required="true" />
+                    <h:outputLabel for="precio_unitario" value="precio unitario" />
+                    <p:inputText id="precio_unitarioSele" value="#{ventaController.detalleSeleccionado.precio_unitario}" required="true" readonly="true" />
+                    <h:outputLabel for="subtotal" value="subtotal : " />
+                    <p:inputText id="subtotalSele" value="#{ventaController.detalleSeleccionado.subtotal}" required="true" readonly="true"/>
+
+                </h:panelGrid>
+
+                <p:commandButton value="Guardar cambios"
+                                 action="#{ventaController.editarDetalleVenta()}"
+                                 update="@all"
+                                 oncomplete="PF('dialogEditar').hide()" />
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+
+
+
+
