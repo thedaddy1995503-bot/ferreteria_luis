@@ -6,11 +6,10 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Servidor Payara oficial (Última versión estable que incluye Java 17)
+# Etapa 2: Servidor Payara oficial
 FROM payara/server-full:latest
 
-# Copiamos el .war generado
-# Copiar el .war generado usando la ruta absoluta del dominio por defecto en Payara 6
-COPY --from=builder /app/target/FerreteriaLuis-1.0-SNAPSHOT.war /opt/payara/appserver/glassfish/domains/domain1/autodeploy/ROOT.war
+# Copiamos el .war directamente a la variable de entorno DEPLOY_DIR que Payara lee sí o sí
+COPY --from=builder /app/target/FerreteriaLuis-1.0-SNAPSHOT.war ${DEPLOY_DIR}/ROOT.war
 
 EXPOSE 8080
