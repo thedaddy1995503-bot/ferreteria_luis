@@ -2,14 +2,14 @@
     xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="jakarta.faces.core" xmlns:p="http://primefaces.org/ui"
     xmlns:ui="jakarta.faces.facelets">
 
-    <ui:define name="title">Nueva Venta - Ferretería Luis</ui:define>
-    <ui:define name="pageTitle">Módulo de Ventas</ui:define>
-    <ui:define name="pageSubtitle">Procesamiento de pedidos y facturación</ui:define>
+    <ui:define name="title">Presupuesto - Ferretería Luis</ui:define>
+    <ui:define name="pageTitle">Módulo de Presupuestos</ui:define>
+    <ui:define name="pageSubtitle">Cotizaciones y presupuesto para clientes</ui:define>
 
     <ui:define name="content">
-        <h:form id="ventaForm">
+        <h:form id="presupuestoForm">
             <p:remoteCommand name="rcAgregarPrimerResultado" action="#{ManagerProductos.agregarPrimerResultado()}"
-                update=":ventaForm:carritoWrapper :ventaForm:totalSummary :ventaForm:btnsAccion :ventaForm:msgs"
+                update=":presupuestoForm:carritoWrapper :presupuestoForm:totalSummary :presupuestoForm:btnsAccion :presupuestoForm:msgs"
                 process="@this" />
             <div style="display: grid; grid-template-columns: 1fr 350px; gap: 30px; align-items: start;">
 
@@ -50,58 +50,63 @@
                                 </p:column>
                                 <p:column style="width: 50px; text-align: center;">
                                     <p:commandButton icon="pi pi-plus" 
-                                        title="#{p.stock le 0 ? 'Sin stock' : 'Agregar al carrito'}"
-                                        actionListener="#{ManagerProductos.agregarAlCarrito(p)}" process="@this"
-                                        disabled="#{p.stock le 0}"
-                                        update=":ventaForm:carritoWrapper :ventaForm:totalSummary :ventaForm:btnsAccion :ventaForm:msgs"
+                                        title="Agregar al presupuesto"
+                                        actionListener="#{ManagerProductos.agregarAlPresupuesto(p)}" process="@this"
+                                        update=":presupuestoForm:carritoWrapper :presupuestoForm:totalSummary :presupuestoForm:btnsAccion :presupuestoForm:msgs"
                                         styleClass="rounded-button ui-button-success ui-button-flat" />
                                 </p:column>
                             </p:dataTable>
-
-                            <h:panelGroup id="opcionesVenta" style="display: none;" />
                         </div>
                     </div>
 
                     <!-- Tabla de Carrito -->
                     <div class="premium-card">
-                        <div class="card-header">
-                            <h2 style="margin:0; font-size: 1.1rem;">2. Carrito de Compras</h2>
+                        <div class="card-header"
+                            style="display: flex; justify-content: space-between; align-items: center;">
+                            <h2 style="margin:0; font-size: 1.1rem;">2. Detalle del Presupuesto</h2>
+                            <div>
+                                <p:commandButton value="Exportar PDF" icon="pi pi-file-pdf" widgetVar="btnExportarPDF"
+                                    styleClass="ui-button-danger ui-button-flat"
+                                    rendered="#{not empty ManagerProductos.itemsCarrito}">
+                                    <p:dataExporter type="pdf" target="carritoTable"
+                                        fileName="Presupuesto_FerreteriaLuis"
+                                        preProcessor="#{ManagerProductos.preProcessPDF}"
+                                        postProcessor="#{ManagerProductos.postProcessPDF}" />
+                                </p:commandButton>
+                            </div>
                         </div>
                         <h:panelGroup id="carritoWrapper">
                             <p:dataTable id="carritoTable" value="#{ManagerProductos.itemsCarrito}" var="item"
-                                emptyMessage="No hay productos en el carrito" reflow="true">
+                                emptyMessage="No hay productos en el presupuesto" reflow="true">
 
                                 <p:column headerText="Producto">
                                     <div style="font-weight: 600;">#{item.producto.nom_producto}</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-muted);">
-                                        #{item.esVentaPorUnidad ? 'Venta por Varilla' : 'Venta Estándar'}
-                                    </div>
                                 </p:column>
 
-                                <p:column headerText="Precio" style="width: 100px; text-align: center;">
-                                    <p:inputNumber value="#{item.precioAplicado}" symbol="$" decimalPlaces="2" style="width: 80px;" modifyValueOnWheel="false" minValue="0" inputStyle="text-align: center; width: 100%;" onkeydown="if(event.keyCode==13){return false;}">
-                                        <p:ajax event="change" listener="#{ManagerProductos.validarPrecio(item)}" 
-                                            update=":ventaForm:carritoWrapper :ventaForm:totalSummary :ventaForm:msgs :ventaForm:btnsAccion" />
-                                    </p:inputNumber>
-                                </p:column>
-
-                                <p:column headerText="Cant." style="width: 120px; text-align: center;">
-                                    <p:inputNumber value="#{item.cantidad}" decimalPlaces="2" style="width: 80px;" modifyValueOnWheel="false" minValue="0" inputStyle="text-align: center; width: 100%;" onkeydown="if(event.keyCode==13){return false;}">
-                                        <p:ajax event="change"
-                                            update=":ventaForm:carritoWrapper :ventaForm:totalSummary :ventaForm:btnsAccion" />
-                                    </p:inputNumber>
-                                </p:column>
-
-                                <p:column headerText="Subtotal" style="width: 110px; text-align: center;">
-                                    <h:outputText value="#{item.subtotal}" style="font-weight: 700; color: var(--primary-dark); font-size: 1.1rem;">
+                                <p:column headerText="Precio" style="width: 100px; text-align: right;">
+                                    <h:outputText value="#{item.precioAplicado}">
                                         <f:convertNumber type="currency" currencySymbol="$" />
                                     </h:outputText>
                                 </p:column>
 
-                                <p:column style="width: 50px; text-align: center;">
+                                <p:column headerText="Cant." style="width: 120px; text-align: center;">
+                                    <p:inputNumber value="#{item.cantidad}" decimalPlaces="2" style="width: 80px;">
+                                        <p:ajax event="change"
+                                            update=":presupuestoForm:carritoWrapper :presupuestoForm:totalSummary :presupuestoForm:btnsAccion" />
+                                    </p:inputNumber>
+                                </p:column>
+
+                                <p:column headerText="Subtotal" style="width: 100px; text-align: right;">
+                                    <h:outputText value="#{item.subtotal}"
+                                        style="font-weight: 700; color: var(--primary-dark);">
+                                        <f:convertNumber type="currency" currencySymbol="$" />
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column style="width: 50px; text-align: center;" exportable="false">
                                     <p:commandButton icon="pi pi-times"
                                         action="#{ManagerProductos.eliminarDelCarrito(item)}" process="@this"
-                                        update=":ventaForm:carritoWrapper :ventaForm:totalSummary :ventaForm:btnsAccion"
+                                        update=":presupuestoForm:carritoWrapper :presupuestoForm:totalSummary :presupuestoForm:btnsAccion"
                                         styleClass="rounded-button ui-button-danger ui-button-flat" />
                                 </p:column>
                             </p:dataTable>
@@ -115,7 +120,8 @@
                     <!-- Resumen de Totales -->
                     <div class="premium-card" style="background: var(--primary-dark); color: white;">
                         <h:panelGroup id="totalSummary">
-                            <div style="margin-bottom: 20px; opacity: 0.8; font-size: 0.9rem;">RESUMEN DE VENTA</div>
+                            <div style="margin-bottom: 20px; opacity: 0.8; font-size: 0.9rem;">RESUMEN DE PRESUPUESTO
+                            </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                                 <span>Subtotal:</span>
                                 <span>$#{ManagerProductos.totalVenta}</span>
@@ -151,7 +157,7 @@
                                     <p:commandButton icon="pi pi-user-plus" title="Nuevo Cliente"
                                         oncomplete="PF('dlgNuevoCliente').show()"
                                         actionListener="#{ManagerClientes.prepararNuevoCliente()}"
-                                        update=":ventaForm:dlgNuevoClienteId"
+                                        update=":formNuevoCliente:dlgNuevoClienteId"
                                         styleClass="ui-button-help rounded-button ui-button-flat" />
                                 </div>
                                 <h:panelGroup id="msgCliente">
@@ -164,24 +170,20 @@
 
                             <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 15px 0;" />
 
-                            <h:panelGroup id="opcionesCheckout">
-                                <div class="field" style="margin-bottom: 15px;">
-                                    <p:selectBooleanCheckbox value="#{ManagerProductos.ventaPagada}"
-                                        itemLabel="¿Venta Pagada?" />
-                                </div>
-                                <div class="field" style="margin-bottom: 25px;">
-                                    <p:selectBooleanCheckbox value="#{ManagerProductos.ventaEntregada}"
-                                        itemLabel="¿Productos Entregados?" />
-                                </div>
+                            <h:panelGroup id="btnsAccion">
+                                <p:commandButton value="GUARDAR PRESUPUESTO"
+                                    action="#{ManagerProductos.finalizarPresupuesto()}"
+                                    process=":presupuestoForm:clienteSearch @this" update=":presupuestoForm:msgs"
+                                    oncomplete="if (!args.validationFailed) { PF('dlgVentaExitosa').show(); }"
+                                    icon="pi pi-check-circle" styleClass="ui-button-success"
+                                    disabled="#{empty ManagerProductos.itemsCarrito or ManagerProductos.clienteSeleccionado == null}"
+                                    style="height: 50px; font-weight: 800; font-size: 1rem; width: 100%;" />
                             </h:panelGroup>
 
-                            <h:panelGroup id="btnsAccion">
-                                <p:commandButton value="FINALIZAR VENTA" action="#{ManagerProductos.finalizarVenta()}"
-                                    process=":ventaForm:clienteSearch :ventaForm:opcionesCheckout @this"
-                                    update=":ventaForm:msgs" icon="pi pi-check-circle" styleClass="ui-button-primary"
-                                    disabled="#{empty ManagerProductos.itemsCarrito or ManagerProductos.clienteSeleccionado == null}"
-                                    style="height: 50px; font-weight: 800; font-size: 1.1rem; width: 100%;" />
-                            </h:panelGroup>
+                            <p
+                                style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; text-align: center;">
+                                * Se guardará como venta pendiente de pago y entrega.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -190,24 +192,28 @@
             <p:growl id="msgs" showDetail="true" />
 
             <!-- Diálogo de Éxito -->
-            <p:dialog header="Venta Exitosa" widgetVar="dlgVentaExitosa" modal="true" width="400" showEffect="fade"
-                hideEffect="fade">
+            <p:dialog header="Presupuesto Guardado" widgetVar="dlgVentaExitosa" modal="true" width="400"
+                showEffect="fade" hideEffect="fade">
                 <div style="text-align: center; padding: 20px;">
                     <i class="pi pi-check-circle"
                         style="font-size: 5rem; color: var(--accent-green); margin-bottom: 20px;"></i>
-                    <h2 style="margin-bottom: 15px;">¡Venta Registrada!</h2>
-                    <p style="color: var(--text-muted);">La transacción se completó correctamente y el stock ha sido
-                        actualizado.</p>
+                    <h2 style="margin-bottom: 15px;">¡Presupuesto Registrado!</h2>
+                    <p style="color: var(--text-muted);">El presupuesto ha sido guardado en el historial como venta
+                        pendiente.</p>
                 </div>
                 <f:facet name="footer">
                     <div style="text-align: center;">
-                        <p:commandButton value="Aceptar" oncomplete="PF('dlgVentaExitosa').hide()"
-                            styleClass="ui-button-success" style="width: 150px;" />
+                        <p:commandButton value="Aceptar" ajax="false"
+                            onclick="console.log('Navegando a Detalle de Facturas...');"
+                            action="#{ManagerProductos.limpiarCarrito()}" styleClass="ui-button-success"
+                            style="width: 150px;" />
                     </div>
                 </f:facet>
             </p:dialog>
+        </h:form>
 
-            <!-- Diálogo Nuevo Cliente -->
+        <!-- Formulario Separado para Nuevo Cliente para evitar errores de validación -->
+        <h:form id="formNuevoCliente">
             <p:dialog header="Registrar Nuevo Cliente" widgetVar="dlgNuevoCliente" modal="true" width="500"
                 id="dlgNuevoClienteId" responsive="true">
                 <div class="ui-fluid p-grid">
@@ -243,35 +249,11 @@
                             styleClass="ui-button-secondary ui-button-flat" />
                         <p:commandButton value="Guardar Cliente" icon="pi pi-check"
                             actionListener="#{ManagerClientes.guardarClientes()}"
-                            update="clienteSearch msgCliente :ventaForm:msgs"
+                            update=":presupuestoForm:clienteSearch :presupuestoForm:msgCliente :presupuestoForm:msgs"
                             oncomplete="if (!args.validationFailed) PF('dlgNuevoCliente').hide()"
                             styleClass="ui-button-success" />
                     </div>
                 </f:facet>
-            </p:dialog>
-
-            <!-- Diálogo Selección Tipo Venta Hierro -->
-            <p:dialog header="Seleccionar Tipo de Venta" widgetVar="dlgSeleccionVentaHierro" modal="true" width="450"
-                responsive="true" closable="false">
-                <div style="text-align: center; padding: 15px;">
-                    <i class="pi pi-question-circle"
-                        style="font-size: 3rem; color: var(--accent-blue); margin-bottom: 15px;"></i>
-                    <h3 style="margin-bottom: 15px;">#{ManagerProductos.productoHierroPendiente.nom_producto}</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 20px;">
-                        Este producto se vende por Quintal completo o por Varilla individual. ¿Cómo desea agregarlo?
-                    </p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <p:commandButton value="Por Varilla (Unidad)" icon="pi pi-box"
-                            actionListener="#{ManagerProductos.confirmarVentaHierro(true)}" process="@this"
-                            oncomplete="PF('dlgSeleccionVentaHierro').hide()"
-                            update="carritoWrapper totalSummary :ventaForm:msgs" styleClass="ui-button-outlined" />
-
-                        <p:commandButton value="Por Quintal (Completo)" icon="pi pi-database"
-                            actionListener="#{ManagerProductos.confirmarVentaHierro(false)}" process="@this"
-                            oncomplete="PF('dlgSeleccionVentaHierro').hide()"
-                            update="carritoWrapper totalSummary :ventaForm:msgs" styleClass="ui-button-primary" />
-                    </div>
-                </div>
             </p:dialog>
         </h:form>
 
@@ -279,31 +261,6 @@
             .ui-inputnumber input {
                 text-align: center !important;
             }
-
-            .report-button {
-                padding: 12px 25px;
-                border-radius: 8px;
-                font-weight: 600;
-                color: white;
-                background: var(--accent-blue);
-                border: none;
-                cursor: pointer;
-            }
         </style>
-        <script>
-            //<![CDATA[
-            $(document).on("keydown", ".ui-inputnumber input", function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    var inputs = $(this).closest('form').find(':input:visible:enabled:not([readonly])');
-                    var index = inputs.index(this);
-                    if (index > -1 && index + 1 < inputs.length) {
-                        inputs.eq(index + 1).focus();
-                    }
-                    return false;
-                }
-            });
-            //]]>
-        </script>
     </ui:define>
 </ui:composition>

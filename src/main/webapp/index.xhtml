@@ -1,254 +1,261 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:p="http://primefaces.org/ui">
-    <head>
-            <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Neon Dark Login</title>
-                <link rel="stylesheet" href="../java/Recursos/css/style.css" />
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core"
+    xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acceso - Ferretería Luis</title>
 
-        <style type="text/css">
-            /* Aquí va el código CSS */
-            /*
-      * Archivo: style.css
-      * Ubicación asumida: ../resources/shared/css/style.css
-      */
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&amp;display=swap"
+        rel="stylesheet" />
 
-            /* --- Variables de Color --- */
-            :root {
-                --dark-bg: #101017;
-                --card-bg: #1e1e2d;
-                --text-color: #f0f0f0;
-                --placeholder-color: #888;
-                --input-bg: #2b2b3e;
-                --accent-light: #50ff9d; /* Verde/Cian para el gradiente */
-                --accent-dark: #00e0ff; /* Azul para el gradiente */
-                --link-color: #00c7e0;
+    <style type="text/css">
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --accent: #50ff9d;
+            --dark-bg: #09090b;
+            --card-bg: rgba(24, 24, 27, 0.8);
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --input-bg: rgba(39, 39, 42, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(0, 210, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(58, 123, 213, 0.05) 0%, transparent 40%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Animated background blobs */
+        .blob {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.15;
+            animation: float 20s infinite alternate;
+        }
+
+        @keyframes float {
+            from {
+                transform: translate(-20%, -20%) scale(1);
             }
 
-            /* --- Estilos Globales y Fondo Oscuro --- */
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
+            to {
+                transform: translate(20%, 20%) scale(1.2);
+            }
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
 
-            body {
-                font-family: Arial, sans-serif;
-                background-color: var(--dark-bg);
-                color: var(--text-color);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
+        }
 
-            /* Ocultar etiquetas para el diseño (accesibilidad) */
-            .sr-only {
-                position: absolute;
-                width: 1px;
-                height: 1px;
-                margin: -1px;
-                padding: 0;
-                overflow: hidden;
-                clip: rect(0, 0, 0, 0);
-                border: 0;
-            }
+        .logo-area {
+            margin-bottom: 30px;
+        }
 
-            /* --- Tarjeta de Login (login-card) --- */
-            .login-card {
-                width: 380px;
-                padding: 40px;
-                background-color: var(--card-bg);
-                border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Sombra suave */
-                text-align: center;
-            }
+        .logo-area img {
+            filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.3));
+            margin-bottom: 15px;
+        }
 
-            /* --- Encabezado --- */
-            .login-header {
-                margin-bottom: 30px;
-            }
+        .login-header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-            .logo-icon {
-                font-size: 36px;
-                margin-bottom: 10px;
-                /* Estilo del rayo */
-                color: var(--accent-light);
-                text-shadow: 0 0 10px var(--accent-light); /* Efecto neón suave */
-            }
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
 
-            .login-header h1 {
-                font-size: 28px;
-                font-weight: bold;
-                margin-bottom: 5px;
-            }
+        /* PrimeFaces Input Overrides */
+        .ui-inputfield {
+            background: var(--input-bg) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 12px !important;
+            color: white !important;
+            padding: 12px 16px !important;
+            font-family: 'Inter', sans-serif !important;
+            transition: all 0.2s !important;
+            width: 100% !important;
+        }
 
-            .login-header p {
-                color: #b0b0c2;
-                font-size: 14px;
-            }
+        .ui-inputfield:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 2px rgba(0, 210, 255, 0.2) !important;
+            background: rgba(39, 39, 42, 0.8) !important;
+        }
 
-            /* --- Formulario y Campos --- */
-            .login-form {
-                margin-top: 30px;
-            }
+        .ui-password {
+            width: 100% !important;
+        }
 
-            .form-group {
-                margin-bottom: 20px;
-                position: relative;
-            }
+        .field-container {
+            text-align: left;
+            margin-bottom: 20px;
+        }
 
-            .form-group input {
-                width: 100%;
-                padding: 15px 50px 15px 15px;
-                background-color: var(--input-bg);
-                border: 1px solid var(--input-bg);
-                border-radius: 8px;
-                color: var(--text-color);
-                font-size: 16px;
-                transition: border-color 0.3s;
-            }
+        .field-container label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            margin-left: 4px;
+        }
 
-            .form-group input:focus {
-                outline: none;
-                border-color: var(--accent-light); /* Línea de enfoque neón */
-            }
+        .login-btn {
+            width: 100%;
+            padding: 14px !important;
+            border-radius: 12px !important;
+            background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+            border: none !important;
+            color: white !important;
+            font-weight: 700 !important;
+            font-size: 15px !important;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 210, 255, 0.2) !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+            margin-top: 10px;
+        }
 
-            .form-group input::placeholder {
-                color: var(--placeholder-color);
-            }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 210, 255, 0.3) !important;
+        }
 
-            .password-group {
-                margin-bottom: 15px; /* Reducir margen para acercar a opciones */
-            }
+        .login-btn:active {
+            transform: translateY(0);
+        }
 
-            /* Botón de alternar contraseña (el icono del ojo) */
-            .password-toggle {
-                position: absolute;
-                top: 50%;
-                right: 15px;
-                transform: translateY(-50%);
-                background: none;
-                border: none;
-                cursor: pointer;
-                padding: 5px;
-            }
+        .footer-links {
+            margin-top: 25px;
+            font-size: 13px;
+        }
 
-            .eye-icon {
-                /* Representación simple del icono del ojo */
-                display: inline-block;
-                width: 18px;
-                height: 18px;
-                background-color: var(--placeholder-color);
-                border-radius: 50%;
-                position: relative;
-            }
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
 
-            /* --- Opciones (Remember me / Forgot password) --- */
-            .form-options {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                font-size: 14px;
-                margin-bottom: 30px;
-                color: var(--placeholder-color);
-            }
+        .footer-links a:hover {
+            color: var(--accent);
+        }
 
-            .remember-me-label input[type="checkbox"] {
-                /* Estilado avanzado para checkboxes requeriría más CSS, usamos el nativo */
-                margin-right: 5px;
-            }
+        /* Customizing the Eye icon for p:password toggleMask */
+        .ui-password-info {
+            display: none !important;
+            /* Hide strength info */
+        }
 
-            .forgot-password {
-                color: var(--link-color);
-                text-decoration: none;
-                transition: color 0.3s;
-            }
+        .ui-inputgroup-addon {
+            background: transparent !important;
+            border: none !important;
+            color: var(--text-muted) !important;
+        }
+    </style>
+</h:head>
+<h:body>
+    <div class="blob"></div>
 
-            .forgot-password:hover {
-                color: var(--accent-light);
-            }
+    <div class="login-card">
+        <header class="logo-area">
+            <img src="recursos-web/iniciar.png" alt="Logo" width="80" height="80" />
+            <div class="login-header">
+                <h1>Bienvenido de nuevo</h1>
+                <p>Ingresa tus credenciales para continuar</p>
+            </div>
+        </header>
 
-            /* --- Botón de Sign In (El Gradiente Neón) --- */
-            .login-btn {
-                width: 100%;
-                padding: 15px;
-                font-size: 16px;
-                font-weight: bold;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                /* Gradiente del botón tal como se ve en la imagen */
-                background-image: linear-gradient(to right, var(--accent-light), var(--accent-dark));
-                box-shadow: 0 4px 15px rgba(0, 224, 255, 0.4); /* Sombra para efecto neón */
-                transition: all 0.3s ease;
-            }
+        <h:form id="loginForm">
+            <p:growl id="growl" showDetail="true" />
 
-            .login-btn:hover {
-                opacity: 0.9;
-                box-shadow: 0 4px 20px rgba(0, 224, 255, 0.6); /* Sombra más intensa al pasar el ratón */
-            }
+            <div class="field-container">
+                <label>Usuario</label>
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon"><i class="pi pi-user"></i></span>
+                    <p:inputText id="inputUsuario" value="#{ManagerUsuario.nomUsuario}" required="true"
+                        placeholder="Nombre de usuario" />
+                </div>
+            </div>
 
-            /* --- Divisor --- */
-            .auth-divider {
-                text-align: center;
-                color: var(--placeholder-color);
-                font-size: 12px;
-                margin: 25px 0 0;
-            }
-        </style>
-    </head>
-    <body>
-            <div class="login-container">
-                    <div class="login-card">
-                            <header class="login-header">
-                                                    <div class="logo-icon">
-                        <img src="recursos-web/iniciar.png" alt="Logotipo Transparente" width="100" height="100" />
-                    </div> 
-                                    <h1>Iniciar sesion</h1>
-                                    <p>Acceder a tu cuenta</p>
-                                </header>
-                            
-                            <h:form class="login-form" id="loginForm">
-                                    
-                                                    <div class="form-group">
-                                            <label for="email" class="sr-only">usuario</label>
-                                           <h:inputText
-                            id="inputUsuario"
-                            value="#{ManagerUsuario.nomUsuario}" 
-                            required="true"
-                            class="form-input" />
-                                        </div>
+            <div class="field-container">
+                <label>Contraseña</label>
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon"><i class="pi pi-lock"></i></span>
+                    <p:password id="password" value="#{ManagerUsuario.contras}" required="true" placeholder="••••••••"
+                        toggleMask="true" redisplay="true" />
+                </div>
+            </div>
 
-                                                    <div class="form-group password-group">
-                                            <label for="password" class="sr-only">contra</label>
-                                           <!-- <input type="password" id="password" name="password" required="required" autocomplete="current-password" placeholder="contra" />-->
-                        <h:inputText                         
-                            id="password"
-                            value="#{ManagerUsuario.contras}" 
-                            required="true"
-                            class="form-input" />
-                                            <button type="button" class="password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
-                                                    <span class="eye-icon"></span>
-                                                </button>
-                                        </div>
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 25px;">
+                <a href="#" style="color: var(--text-muted); font-size: 13px; text-decoration: none;">¿Olvidaste tu
+                    contraseña?</a>
+            </div>
 
-                                                    <div class="form-options">
-                                            <a href="#" class="forgot-password">olvidaste tu contra?</a>
-                                        </div>
+            <p:commandButton action="#{ManagerUsuario.login()}" value="ENTRAR AL SISTEMA" update="growl"
+                styleClass="login-btn" />
 
-                                                    <h:commandButton 
-                        action="#{ManagerUsuario.login()}" 
-                        value="SIGN IN" 
-                        class="login-btn" />
-                                </h:form>
-                          
-                            
-                                    </div>
-                </div>
-    </body>
+            <div class="footer-links">
+                <span>¿No tienes acceso? </span>
+                <a href="#">Contacta al administrador</a>
+            </div>
+        </h:form>
+    </div>
+</h:body>
+
 </html>

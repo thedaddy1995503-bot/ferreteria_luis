@@ -20,26 +20,34 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "detalle_venta")
 public class DetalleVenta {
-    
-    public DetalleVenta(){}
-    
+
+    public DetalleVenta() {
+    }
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id_detalle;
-    
+
     @Column(name = "cantidad")
-    private int cantidad;
-    @JoinColumn(name = "id_producto",nullable = false)
+    private double cantidad;
+    @ManyToOne
+    @JoinColumn(name = "id_producto", nullable = false)
     private Productos producto;
-    @Column(name="precio_unitario")
+    @Column(name = "precio_unitario")
     private double precio_unitario;
-    @Column(name="subtotal")
+    @Column(name = "subtotal")
     private double subtotal;
-    
+
     @ManyToOne
     @JoinColumn(name = "id_venta", nullable = false)
     private Ventas venta;
+
+    @Column(name = "pagado")
+    private boolean pagado;
+
+    @Column(name = "entregado")
+    private boolean entregado;
 
     public Productos getProducto() {
         return producto;
@@ -92,11 +100,11 @@ public class DetalleVenta {
         this.id_detalle = id_detalle;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -115,5 +123,21 @@ public class DetalleVenta {
     public void setSubtotal(double subtotal) {
         this.subtotal = subtotal;
     }
-    
+
+    public boolean isPagado() {
+        return pagado;
+    }
+
+    public void setPagado(boolean pagado) {
+        this.pagado = pagado;
+    }
+
+    public boolean isEntregado() {
+        return entregado;
+    }
+
+    public void setEntregado(boolean entregado) {
+        this.entregado = entregado;
+    }
+
 }

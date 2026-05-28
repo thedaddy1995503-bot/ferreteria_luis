@@ -1,0 +1,63 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="jakarta.faces.core" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="jakarta.faces.facelets">
+
+    <ui:define name="title">Gestión de Medidas - Ferretería Luis</ui:define>
+    <ui:define name="pageTitle">Configuración de Medidas</ui:define>
+    <ui:define name="pageSubtitle">Definición de unidades y factores de conversión</ui:define>
+
+    <ui:define name="content">
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+            <!-- Formulario de Registro -->
+            <div class="premium-card">
+                <div class="card-header">
+                    <h2 style="margin:0; font-size: 1.1rem;">Nueva Unidad</h2>
+                </div>
+                <h:form id="formMedida">
+                    <div class="ui-fluid">
+                        <div class="field" style="margin-bottom: 20px;">
+                            <p:outputLabel for="nombre" value="Nombre de la Medida (ej. Quintal, Varilla):"
+                                style="font-weight: 600;" />
+                            <p:inputText id="nombre" value="#{ManagerMedida.medida.nombre}" required="true" />
+                        </div>
+                        <p:commandButton value="Guardar Medida" action="#{ManagerMedida.guardarMedida()}"
+                            update="@form :tablaMedidasForm" icon="pi pi-check" styleClass="ui-button-primary" />
+                    </div>
+                </h:form>
+            </div>
+
+            <!-- Tabla de Medidas -->
+            <div class="premium-card">
+                <div class="card-header">
+                    <h2 style="margin:0; font-size: 1.1rem;">Unidades Registradas</h2>
+                </div>
+                <h:form id="tablaMedidasForm">
+                    <p:dataTable id="tablaMedidas" value="#{ManagerMedida.listaMedidas}" var="m" reflow="true"
+                        paginator="true" rows="10" paginatorPosition="bottom">
+
+                        <p:column headerText="ID" style="width: 20%">
+                            <h:outputText value="#{m.id_medida}" />
+                        </p:column>
+
+                        <p:column headerText="Nombre de Unidad">
+                            <h:outputText value="#{m.nombre}" style="font-weight: 600; color: var(--primary-dark);" />
+                        </p:column>
+
+                        <p:column style="width: 20%; text-align: center;">
+                            <p:commandButton icon="pi pi-trash" action="#{ManagerMedida.eliminarMedida(m)}"
+                                update="@form" styleClass="rounded-button ui-button-danger ui-button-flat">
+                                <p:confirm header="Confirmación" message="¿Eliminar esta medida?"
+                                    icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" />
+                        <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" />
+                    </p:confirmDialog>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

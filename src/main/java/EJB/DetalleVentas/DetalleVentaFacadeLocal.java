@@ -6,6 +6,7 @@ package EJB.DetalleVentas;
 
 import Entity.DetalleVenta;
 import jakarta.ejb.Local;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,9 +27,15 @@ public interface DetalleVentaFacadeLocal {
     List<DetalleVenta> findAll();
 
     List<DetalleVenta> findRange(int[] range);
-    
+
     List<DetalleVenta> buscarPorVenta(Long idVenta);
 
+    List<DetalleVenta> obtenerTodosConProductos();
+
     int count();
-    
+
+    Object[] obtenerProductoMasVendido();
+
+    List<DetalleVenta> obtenerPorRangoFechas(Date inicio, Date fin);
+
 }

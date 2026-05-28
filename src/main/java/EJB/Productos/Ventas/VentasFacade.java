@@ -43,9 +43,9 @@ public class VentasFacade extends AbstractFacade<Ventas> implements VentasFacade
     
     @Override
     public List<Ventas> obtenerVentasConCliente() {
-    return em.createQuery("SELECT v FROM Ventas v JOIN FETCH v.id_cliente", Ventas.class)
-             .getResultList();
-}
+        return em.createQuery("SELECT v FROM Ventas v JOIN FETCH v.id_cliente ORDER BY v.id_venta DESC", Ventas.class)
+                 .getResultList();
+    }
     
     @Override
     public Double obtenerTotalVentas() {

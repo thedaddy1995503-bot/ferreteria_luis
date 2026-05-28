@@ -14,16 +14,37 @@ import java.io.Serializable;
 public class ItemCarrito implements Serializable {
 
     private Productos producto;
-    private int cantidad = 1;
-    
+    private double cantidad = 1;
+    private boolean esVentaPorUnidad = false;
+
+    private Double precioVentaManual = null;
+
     public ItemCarrito(Productos producto) {
         this.producto = producto;
         this.cantidad = 1; // Inicializar en 1 al agregar
     }
 
-
     public double getSubtotal() {
-        return this.cantidad * this.producto.getPrecio();
+        return this.cantidad * getPrecioAplicado();
+    }
+
+    public void setSubtotal(double nuevoSubtotal) {
+        if (this.cantidad > 0) {
+            setPrecioAplicado(nuevoSubtotal / this.cantidad);
+        }
+    }
+
+    public double getPrecioAplicado() {
+        if (precioVentaManual != null) {
+            return precioVentaManual;
+        }
+        Double pUnit = this.producto.getPrecio_unitario();
+        Double pQuintal = this.producto.getPrecio();
+        return esVentaPorUnidad ? (pUnit != null ? pUnit : 0.0) : (pQuintal != null ? pQuintal : 0.0);
+    }
+
+    public void setPrecioAplicado(double precioAplicado) {
+        this.precioVentaManual = precioAplicado;
     }
 
     public Productos getProducto() {
@@ -34,12 +55,21 @@ public class ItemCarrito implements Serializable {
         this.producto = producto;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
+    public void setCantidad(double cantidad) {
+        // Forzar a entero (eliminando decimales) antes de guardar
+        this.cantidad = (double) ((long) cantidad);
+    }
+
+    public boolean isEsVentaPorUnidad() {
+        return esVentaPorUnidad;
+    }
+
+    public void setEsVentaPorUnidad(boolean esVentaPorUnidad) {
+        this.esVentaPorUnidad = esVentaPorUnidad;
     }
 
 }

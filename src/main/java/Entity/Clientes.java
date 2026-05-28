@@ -20,27 +20,29 @@ import java.util.Objects;
  * @author juank
  */
 @Entity
-@Table(name="clientes")
+@Table(name = "clientes")
 public class Clientes {
-    
-    public Clientes(){}
+
+    public Clientes() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cliente")
-     private Long Id_Cliente;
-    
-    @Column(name="correo", nullable = false)
+    private Long id_cliente;
+
+    @Column(name = "correo", nullable = false)
     private String correo;
-    @Column(name = "direccion",nullable = false)
+    @Column(name = "direccion", nullable = false)
     private String direccion;
-    @Column(name = "dui",nullable = false)
+    @Column(name = "dui", nullable = false)
     private String dui;
     @Temporal(TemporalType.DATE)
-    @Column(name = "fecha_registro",nullable = false)
+    @Column(name = "fecha_registro", nullable = false)
     private Date fecha_registro;
-    @Column(name = "nombre",nullable = false)
-    private String nombre;
-    @Column(name = "apellidos",nullable = false)
+    @Column(name = "nombre", nullable = false)
+    private String nombres;
+    @Column(name = "apellidos", nullable = false)
     private String apellidos;
 
     public String getApellidos() {
@@ -50,21 +52,22 @@ public class Clientes {
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
     }
-    @Column(name = "telefono",nullable = false)
-    private String telefono;
+
+    @Column(name = "telefono", nullable = false)
+    private String tel;
 
     @Override
     public int hashCode() {
         int hash = 7;
         return hash;
     }
-    
-     public String getTelefono() {
-        return telefono;
+
+    public String getTel() {
+        return tel;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     public Date getFecha_registro() {
@@ -87,20 +90,20 @@ public class Clientes {
             return false;
         }
         final Clientes other = (Clientes) obj;
-        return Objects.equals(this.Id_Cliente, other.Id_Cliente);
+        return Objects.equals(this.id_cliente, other.id_cliente);
     }
 
     @Override
     public String toString() {
-        return "Clientes{" + "Id_Cliente=" + Id_Cliente + '}';
+        return "Clientes{" + "id_cliente=" + id_cliente + '}';
     }
 
-    public Long getId_Cliente() {
-        return Id_Cliente;
+    public Long getId_cliente() {
+        return id_cliente;
     }
 
-    public void setId_Cliente(Long Id_Cliente) {
-        this.Id_Cliente = Id_Cliente;
+    public void setId_cliente(Long id_cliente) {
+        this.id_cliente = id_cliente;
     }
 
     public String getCorreo() {
@@ -127,15 +130,12 @@ public class Clientes {
         this.dui = dui;
     }
 
-
-    public String getNombre() {
-        return nombre;
+    public String getNombres() {
+        return nombres;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
     }
 
- 
-    
 }

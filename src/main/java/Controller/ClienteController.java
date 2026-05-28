@@ -23,20 +23,18 @@ import java.util.List;
 
 @SessionScoped
 @Named("ClienteController")
-public class ClienteController implements Serializable{
-    
+public class ClienteController implements Serializable {
+
     @EJB
     private ClientesFacadeLocal clienteFCL;
     private Clientes cliente;
     private String codigoBusqueda;
     private List<Clientes> resultadosBusqueda;
-    
-    
-    
-     public void buscarCliente() {
+
+    public void buscarCliente() {
 
         this.resultadosBusqueda = new ArrayList<>();
-        //this.resultadosBusqueda = new ArrayList<>();
+        // this.resultadosBusqueda = new ArrayList<>();
         if (codigoBusqueda == null || codigoBusqueda.trim().length() < 3) {
             // Limpia la lista si el texto es muy corto o vacío
             this.resultadosBusqueda = clienteFCL.listarPrimeros10();
@@ -46,7 +44,7 @@ public class ClienteController implements Serializable{
         try {
             List<Clientes> productosEntidad = clienteFCL.BuscarNombre(codigoBusqueda.trim());
             // --- Mapeo de Entidad JPA (Productos) a POJO Frontend (Producto) ---
-            //this.resultadosBusqueda = new ArrayList<>();
+            // this.resultadosBusqueda = new ArrayList<>();
             System.out.println("codigo busqueda " + codigoBusqueda);
             for (Clientes entidad : productosEntidad) {
                 System.out.println("entro al for " + entidad);
@@ -56,19 +54,20 @@ public class ClienteController implements Serializable{
 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo buscar el productio." + e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                            "No se pudo buscar el productio." + e.getMessage()));
             System.out.println("error exception " + e.getMessage());
 
         }
     }
-     
-     private Clientes mapEntidadToPojo(Clientes entidad) {
+
+    private Clientes mapEntidadToPojo(Clientes entidad) {
         // Asume que Productos tiene métodos getID, getNom_producto, etc.
         Clientes pojo = new Clientes();
-        pojo.setId_Cliente(entidad.getId_Cliente()); // Usando los nombres de tu tabla (image_4f4883.png)
-        pojo.setNombre(entidad.getNombre());  // 'nombre' de la columna (image_4f4883.png)
-        pojo.setApellidos(entidad.getApellidos());  // 'precio' de la columna (image_4f4883.png)
-        //pojo.setStock(entidad.getStock());
+        pojo.setId_cliente(entidad.getId_cliente()); // Usando los nombres de tu tabla (image_4f4883.png)
+        pojo.setNombres(entidad.getNombres()); // 'nombre' de la columna (image_4f4883.png)
+        pojo.setApellidos(entidad.getApellidos()); // 'precio' de la columna (image_4f4883.png)
+        // pojo.setStock(entidad.getStock());
         return pojo;
     }
 
@@ -95,13 +94,18 @@ public class ClienteController implements Serializable{
     public void setResultadosBusqueda(List<Clientes> resultadosBusqueda) {
         this.resultadosBusqueda = resultadosBusqueda;
     }
-    
-     @PostConstruct
+
+    public void limpiarBusqueda() {
+        this.codigoBusqueda = "";
+        this.resultadosBusqueda = clienteFCL.listarPrimeros10();
+    }
+
+    @PostConstruct
     public void init() {
         cliente = new Clientes();
-        //this.mensaje = "";
+        // this.mensaje = "";
         this.resultadosBusqueda = clienteFCL.listarPrimeros10();
-        //this.productoMenor=ProductoFCL.obtenerProductoConMenorInventario();
+        // this.productoMenor=ProductoFCL.obtenerProductoConMenorInventario();
 
     }
 }

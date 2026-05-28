@@ -4,13 +4,13 @@
  */
 package Entity;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -22,26 +22,30 @@ import java.util.Date;
  * @author juank
  */
 @Entity
-@Table(name="ventas")
-public class Ventas implements Serializable{
-    
-    public Ventas(){
+@Table(name = "ventas")
+public class Ventas implements Serializable {
+
+    public Ventas() {
     }
-    
+
     private static final long serialVersionUID = 1L;
 
-   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_venta",nullable = false)
+    @Column(name = "id_venta", nullable = false)
     private long id_venta;
     @Temporal(TemporalType.DATE)
-    @Column(name = "fecha_venta",nullable = false)
+    @Column(name = "fecha_venta", nullable = false)
     private Date fecha_venta;
-    @JoinColumn(name = "id_cliente",nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_cliente", nullable = false)
     private Clientes id_cliente;
-    @Column(name = "total",nullable = false)
+    @Column(name = "total", nullable = false)
     private double total;
+    @Column(name = "pagado")
+    private boolean pagado;
+    @Column(name = "entregado")
+    private boolean entregado;
 
     public Clientes getId_cliente() {
         return id_cliente;
@@ -71,7 +75,6 @@ public class Ventas implements Serializable{
         this.fecha_venta = fecha_venta;
     }
 
-  
     public double getTotal() {
         return total;
     }
@@ -79,7 +82,23 @@ public class Ventas implements Serializable{
     public void setTotal(double total) {
         this.total = total;
     }
-    
+
+    public boolean isPagado() {
+        return pagado;
+    }
+
+    public void setPagado(boolean pagado) {
+        this.pagado = pagado;
+    }
+
+    public boolean isEntregado() {
+        return entregado;
+    }
+
+    public void setEntregado(boolean entregado) {
+        this.entregado = entregado;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -101,11 +120,10 @@ public class Ventas implements Serializable{
         final Ventas other = (Ventas) obj;
         return this.id_venta == other.id_venta;
     }
-    
-     @Override
+
+    @Override
     public String toString() {
         return "Ventas{" + "id_cliente=" + id_cliente + '}';
     }
-    
-    
+
 }

@@ -28,15 +28,17 @@ public interface ProductosFacadeLocal {
     List<Productos> findRange(int[] range);
 
     int count();
-    
+
     Productos BuscarNombre(String nombre);
-    
+
+    List<Productos> NombreProducto(String nombre);
+
     List<Productos> BuscarPorNombreParcial(String nombre);
-    
-    void actualizarStock(Long idProducto, int cantidadVendida);
-    
+
+    void actualizarStock(Long idProducto, Double cantidadVendida);
+
     Productos obtenerProductoConMenorInventario();
-    
+
     List<Productos> listarPrimeros10();
-    
+
 }

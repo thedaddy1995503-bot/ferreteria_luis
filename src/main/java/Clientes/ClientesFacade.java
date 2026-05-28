@@ -29,17 +29,17 @@ public class ClientesFacade extends AbstractFacade<Clientes> implements Clientes
     public ClientesFacade() {
         super(Clientes.class);
     }
-    
-    
-     @Override
+
+    @Override
     public Clientes BuscarDui(String dui) {
         try {
 
             return em.createQuery(
                     "SELECT p FROM Clientes p WHERE p.dui LIKE :duiCliente", Clientes.class)
                     // Asigna los parámetros
-                    .setParameter("duiCliente",  "%" + dui + "%")
-                    // Retorna un único objeto Usuario o lanza NoResultException si no encuentra nada
+                    .setParameter("duiCliente", "%" + dui + "%")
+                    // Retorna un único objeto Usuario o lanza NoResultException si no encuentra
+                    // nada
                     .getSingleResult();
         } catch (jakarta.persistence.NoResultException e) {
             return null;
@@ -50,29 +50,29 @@ public class ClientesFacade extends AbstractFacade<Clientes> implements Clientes
         }
 
     }
-     
-    
+
     @Override
     public List<Clientes> BuscarNombre(String nombre) {
         try {
 
             return em.createQuery(
-                    "SELECT p FROM Clientes p WHERE p.nombre LIKE :nomCliente", Clientes.class)
+                    "SELECT p FROM Clientes p WHERE p.nombres LIKE :nomCliente", Clientes.class)
                     // Asigna los parámetros
-                    .setParameter("nomCliente",  "%" + nombre + "%")
-                    // Retorna un único objeto Usuario o lanza NoResultException si no encuentra nada
+                    .setParameter("nomCliente", "%" + nombre + "%")
+                    // Retorna un único objeto Usuario o lanza NoResultException si no encuentra
+                    // nada
                     .getResultList();
         } catch (Exception e) {
             return new ArrayList<>();
         }
 
     }
-    
-       @Override
+
+    @Override
     public List<Clientes> listarPrimeros10() {
-        return em.createQuery("SELECT c FROM Clientes c ORDER BY c.Id_Cliente ASC", Clientes.class)
-             .setMaxResults(2)
-             .getResultList();
-    
-}
+        return em.createQuery("SELECT c FROM Clientes c ORDER BY c.id_cliente ASC", Clientes.class)
+                .setMaxResults(2)
+                .getResultList();
+
+    }
 }

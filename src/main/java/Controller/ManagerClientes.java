@@ -25,6 +25,12 @@ import java.util.List;
 @Named("ManagerClientes")
 public class ManagerClientes implements Serializable {
 
+    @jakarta.inject.Inject
+    private ClienteController clienteController;
+
+    @jakarta.inject.Inject
+    private ManagerProductos managerProductos;
+
     @EJB
     private ClientesFacadeLocal clienteFCL;
     private List<Clientes> ListaClientes;
@@ -45,8 +51,7 @@ public class ManagerClientes implements Serializable {
     public void setCodigoBusqueda(String codigoBusqueda) {
         this.codigoBusqueda = codigoBusqueda;
     }
-    
-    
+
     public Clientes getFacturaCliente() {
         return facturaCliente;
     }
@@ -80,7 +85,7 @@ public class ManagerClientes implements Serializable {
     }
 
     public List<Clientes> getListaClientes() {
-        this.ListaClientes=clienteFCL.findAll();
+        this.ListaClientes = clienteFCL.findAll();
         return ListaClientes;
     }
 
@@ -113,7 +118,7 @@ public class ManagerClientes implements Serializable {
         this.resultadosBusqueda = resultadosBusqueda;
     }
 
-    public void guardar() {
+    public void guardarClientes() {
 
         try {
             clientes.setFecha_registro(new Date());
@@ -124,15 +129,25 @@ public class ManagerClientes implements Serializable {
             clienteSeleccionado = clienteFCL.BuscarDui(dui);
             if (clienteSeleccionado != null) {
 
-                System.out.println("Cliente ya existente " + clienteSeleccionado.getNombre());
-                this.mensaje = "clientes '" + clientes.getNombre() + "' ya existente.";
+                System.out.println("Cliente ya existente " + clienteSeleccionado.getNombres());
+                this.mensaje = "clientes '" + clientes.getNombres() + "' ya existente.";
             } else {
                 clienteFCL.create(clientes);
                 System.out.println("Cliente creado correctamente");
                 this.mensaje = "clientes creado correctamente";
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "cliente guardado correctamente", null));
+
+                // Auto-seleccionar en Ventas si managerProductos está inyectado
+                if (managerProductos != null) {
+                    managerProductos.setClienteSeleccionado(clientes);
+                    managerProductos.setNomClientes(clientes.getNombres());
+                }
+
                 this.clientes = new Clientes();
+                if (clienteController != null) {
+                    clienteController.limpiarBusqueda();
+                }
             }
 
         } catch (Exception ex) {
@@ -142,11 +157,11 @@ public class ManagerClientes implements Serializable {
         }
 
     }
-    
-        public void buscarCliente() {
+
+    public void buscarCliente() {
 
         this.resultadosBusqueda = new ArrayList<>();
-        //this.resultadosBusqueda = new ArrayList<>();
+        // this.resultadosBusqueda = new ArrayList<>();
         if (codigoBusqueda == null || codigoBusqueda.trim().length() < 3) {
             // Limpia la lista si el texto es muy corto o vacío
             this.resultadosBusqueda = clienteFCL.listarPrimeros10();
@@ -156,7 +171,7 @@ public class ManagerClientes implements Serializable {
         try {
             List<Clientes> productosEntidad = clienteFCL.BuscarNombre(codigoBusqueda.trim());
             // --- Mapeo de Entidad JPA (Productos) a POJO Frontend (Producto) ---
-            //this.resultadosBusqueda = new ArrayList<>();
+            // this.resultadosBusqueda = new ArrayList<>();
             System.out.println("codigo busqueda " + codigoBusqueda);
             for (Clientes entidad : productosEntidad) {
                 System.out.println("entro al for " + entidad);
@@ -166,19 +181,23 @@ public class ManagerClientes implements Serializable {
 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo buscar el productio." + e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                            "No se pudo buscar el productio." + e.getMessage()));
             System.out.println("error exception " + e.getMessage());
 
         }
     }
+
     public void prepararEdicion(Long id) {
         ClienteSeleccionado = new Clientes();
         this.ClienteSeleccionado = clienteFCL.find(id);
-        System.out.println("el cliente a editar es " + ClienteSeleccionado.getNombre());
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("cliente seleccionado es ".concat(ClienteSeleccionado.getNombre())));
+        System.out.println("el cliente a editar es " + ClienteSeleccionado.getNombres());
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage("cliente seleccionado es ".concat(ClienteSeleccionado.getNombres())));
 
     }
-     public void editarClientes() {
+
+    public void editarClientes() {
         try {
             clienteFCL.edit(clienteSeleccionado);
             this.ListaClientes = null;
@@ -190,12 +209,12 @@ public class ManagerClientes implements Serializable {
         }
 
     }
-     
-         public void eliminarCliente(Object id) {
+
+    public void eliminarCliente(Object id) {
 
         try {
             clientes = clienteFCL.find(id);
-            System.out.println("el cliente a borrar es " + clientes.getNombre());
+            System.out.println("el cliente a borrar es " + clientes.getNombres());
             clienteFCL.remove(clientes);
             this.ListaClientes = null;
             FacesContext.getCurrentInstance().addMessage(null,
@@ -207,33 +226,31 @@ public class ManagerClientes implements Serializable {
 
     }
 
-
-     private Clientes mapEntidadToPojo(Clientes entidad) {
+    private Clientes mapEntidadToPojo(Clientes entidad) {
         // Asume que Productos tiene métodos getID, getNom_producto, etc.
         Clientes pojo = new Clientes();
-        pojo.setId_Cliente(entidad.getId_Cliente()); // Usando los nombres de tu tabla (image_4f4883.png)
-        pojo.setNombre(entidad.getNombre());  // 'nombre' de la columna (image_4f4883.png)
-        pojo.setApellidos(entidad.getApellidos());  // 'precio' de la columna (image_4f4883.png)
-        //pojo.setStock(entidad.getStock());
+        pojo.setId_cliente(entidad.getId_cliente()); // Usando los nombres de tu tabla (image_4f4883.png)
+        pojo.setNombres(entidad.getNombres()); // 'nombre' de la columna (image_4f4883.png)
+        pojo.setApellidos(entidad.getApellidos()); // 'precio' de la columna (image_4f4883.png)
+        // pojo.setStock(entidad.getStock());
         return pojo;
     }
-    
-    public void clienteSeleccionadoF(Clientes c){
-        facturaCliente= new Clientes();
-        facturaCliente= c;
-        System.out.println("cliente seleccionado "+facturaCliente.getNombre());
-        
-    
+
+    public void clienteSeleccionadoF(Clientes c) {
+        facturaCliente = new Clientes();
+        facturaCliente = c;
+        System.out.println("cliente seleccionado " + facturaCliente.getNombres());
+
     }
-    
-    public long idClienteSeleccionado(){
-    return facturaCliente.getId_Cliente();
+
+    public long idClienteSeleccionado() {
+        return facturaCliente.getId_cliente();
     }
-    
-     public void buscarProducto() {
+
+    public void buscarProducto() {
 
         this.resultadosBusqueda = new ArrayList<>();
-        //this.resultadosBusqueda = new ArrayList<>();
+        // this.resultadosBusqueda = new ArrayList<>();
         if (codigoBusqueda == null || codigoBusqueda.trim().length() < 3) {
             // Limpia la lista si el texto es muy corto o vacío
             this.resultadosBusqueda = clienteFCL.listarPrimeros10();
@@ -243,7 +260,7 @@ public class ManagerClientes implements Serializable {
         try {
             List<Clientes> productosEntidad = clienteFCL.BuscarNombre(codigoBusqueda.trim());
             // --- Mapeo de Entidad JPA (Productos) a POJO Frontend (Producto) ---
-            //this.resultadosBusqueda = new ArrayList<>();
+            // this.resultadosBusqueda = new ArrayList<>();
             System.out.println("codigo busqueda " + codigoBusqueda);
             for (Clientes entidad : productosEntidad) {
                 System.out.println("entro al for " + entidad);
@@ -253,10 +270,29 @@ public class ManagerClientes implements Serializable {
 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo buscar el productio." + e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                            "No se pudo buscar el productio." + e.getMessage()));
             System.out.println("error exception " + e.getMessage());
 
         }
+    }
+
+    public void prepararNuevoCliente() {
+        this.clientes = new Clientes();
+        this.clientes.setFecha_registro(new Date());
+    }
+
+    public List<Clientes> completarClientes(String query) {
+        List<Clientes> todos = getListaClientes();
+        List<Clientes> filtrados = new ArrayList<>();
+
+        for (Clientes c : todos) {
+            if (c.getNombres().toLowerCase().contains(query.toLowerCase()) ||
+                    c.getDui().contains(query)) {
+                filtrados.add(c);
+            }
+        }
+        return filtrados;
     }
 
     @PostConstruct
@@ -264,7 +300,7 @@ public class ManagerClientes implements Serializable {
         clientes = new Clientes();
         this.mensaje = "";
         this.resultadosBusqueda = clienteFCL.listarPrimeros10();
-      
+
     }
 
 }
