@@ -9,7 +9,7 @@ RUN mvn clean package -DskipTests
 # Etapa 2: Servidor Payara oficial
 FROM payara/server-full:latest
 
-# Copiamos el .war directamente a la variable de entorno DEPLOY_DIR que Payara lee sí o sí
-COPY --from=builder /app/target/FerreteriaLuis-1.0-SNAPSHOT.war ${DEPLOY_DIR}/ROOT.war
+# Copiamos el .war manteniendo su nombre original dentro de la ruta nativa de despliegue
+COPY --from=builder /app/target/FerreteriaLuis-1.0-SNAPSHOT.war ${DEPLOY_DIR}/
 
 EXPOSE 8080
