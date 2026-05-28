@@ -10,6 +10,7 @@ RUN mvn clean package -DskipTests
 FROM payara/server-full:latest
 
 # Copiamos el .war generado
-COPY --from=builder /app/target/FerreteriaLuis-1.0-SNAPSHOT.war ${PAYARA_DIR}/glassfish/domains/domain1/autodeploy/ROOT.war
+# Copiar el archivo .war usando la ruta absoluta del dominio por defecto de Payara
+COPY --from=builder /app/target/FerreteriaLuis-1.0-SNAPSHOT.war /opt/payara/appserver/glassfish/domains/domain1/autodeploy/ROOT.war
 
 EXPOSE 8080
