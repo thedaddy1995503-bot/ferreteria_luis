@@ -29,13 +29,12 @@
         validate-atmost-once-period-in-seconds="0" 
         wrap-jdbc-objects="false">
         
-        <property name="Url" value="jdbc:mysql://${env.MYSQLHOST:localhost}:${env.MYSQLPORT:3306}/${env.MYSQLDATABASE:ferreteria}?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"/>
-        <property name="User" value="${env.MYSQLUSER:juank}"/>
-        <property name="Password" value="${env.MYSQLPASSWORD:1234}"/>
+        <property name="Url" value="jdbc:mysql://yamanote.proxy.rlwy.net:37964/railway?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"/>
+        <property name="User" value="root"/>
+        <property name="Password" value="PhnYGxlujFuneaicPqTKIrLzNTpBlLGN"/>
     </jdbc-connection-pool>
 
     <jdbc-resource enabled="true" jndi-name="java:app/Ferreteria" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
     <jdbc-resource enabled="true" jndi-name="java:app/mysql_ferreteria_juankPool" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
-    
     <jdbc-resource enabled="true" jndi-name="pooljcFerreteria__pm" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
 </resources>
