@@ -1,5 +1,5 @@
 # Etapa 1: Construcción de la aplicación con Maven
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
+FROM maven:3.9.6-temurin-17 AS builder
 
 # Establecemos el directorio de trabajo
 WORKDIR /app
@@ -13,7 +13,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Etapa 2: Servidor Payara (equivalente a GlassFish) para ejecutar la app
-FROM payara/server-full:6-jdk17
+FROM payara/server-full:6.2025.1-jdk17
 
 # Copiamos el .war generado en la Etapa 1 a la carpeta de autodeploy de Payara
 # Le cambiamos el nombre a ROOT.war para que la app se abra en la ruta principal (/) sin tener que escribir /FerreteriaLuis
