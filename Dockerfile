@@ -21,6 +21,7 @@ USER payara
 COPY glassfish-resources.asadmin /opt/payara/config/post-boot-commands.asadmin
 
 # 3. Copiar el archivo .war para su despliegue masivo
-COPY --from=builder /app/target/FerreteriaLuis-1.0-SNAPSHOT.war ${PAYARA_DIR}/glassfish/domains/domain1/autodeploy/ROOT.war
+# Copiamos el .war manteniendo su nombre original
+COPY --from=builder /app/target/FerreteriaLuis-1.0-SNAPSHOT.war ${PAYARA_DIR}/glassfish/domains/domain1/autodeploy/FerreteriaLuis-1.0-SNAPSHOT.war
 
 EXPOSE 8080
