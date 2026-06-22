@@ -1,5 +1,6 @@
 # === ETAPA 1: Compilación (Builder) ===
 FROM maven:3.8.5-openjdk-17 AS builder
+ENV MAVEN_OPTS="-Xmx300m -XX:MaxMetaspaceSize=128m"
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
