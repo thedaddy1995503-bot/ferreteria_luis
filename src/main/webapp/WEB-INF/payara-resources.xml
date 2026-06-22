@@ -32,9 +32,11 @@
         <property name="serverName" value="${ENV=MYSQLHOST:yamanote.proxy.rlwy.net}"/>
         <property name="portNumber" value="${ENV=MYSQLPORT:37964}"/>
         <property name="databaseName" value="${ENV=MYSQLDATABASE:railway}"/>
-        <property name="User" value="${ENV=MYSQLUSER:root}"/>
-        <property name="Password" value="${ENV=MYSQLPASSWORD:PhnYGxlujFuneaicPqTKIrLzNTpBlLGN}"/>
-        <property name="URL" value="jdbc:mysql://${ENV=MYSQLHOST:yamanote.proxy.rlwy.net}:${ENV=MYSQLPORT:37964}/${ENV=MYSQLDATABASE:railway}?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"/>
+        <property name="user" value="${ENV=MYSQLUSER:root}"/>
+        <property name="password" value="${ENV=MYSQLPASSWORD:PhnYGxlujFuneaicPqTKIrLzNTpBlLGN}"/>
+        <property name="url" value="jdbc:mysql://${ENV=MYSQLHOST:yamanote.proxy.rlwy.net}:${ENV=MYSQLPORT:37964}/${ENV=MYSQLDATABASE:railway}?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"/>
+        <property name="useSSL" value="false"/>
+        <property name="allowPublicKeyRetrieval" value="true"/>
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
     </jdbc-connection-pool>
 
