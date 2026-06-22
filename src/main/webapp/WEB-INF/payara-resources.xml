@@ -39,7 +39,5 @@
     </jdbc-connection-pool>
 
     <jdbc-resource enabled="true" jndi-name="pooljcFerreteria" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
-    <jdbc-resource enabled="true" jndi-name="java:app/Ferreteria" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
-    <jdbc-resource enabled="true" jndi-name="java:app/mysql_ferreteria_juankPool" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
     <jdbc-resource enabled="true" jndi-name="pooljcFerreteria__pm" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
 </resources>
