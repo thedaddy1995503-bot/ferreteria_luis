@@ -1,4 +1,4 @@
-create-jdbc-connection-pool --datasourceclassname com.mysql.cj.jdbc.MysqlDataSource --restype javax.sql.DataSource --property serverName=${ENV=MYSQLHOST}:portNumber=${ENV=MYSQLPORT}:databaseName=${ENV=MYSQLDATABASE}:User=${ENV=MYSQLUSER}:Password=${ENV=MYSQLPASSWORD}:URL="jdbc\:mysql\://${ENV=MYSQLHOST}\:${ENV=MYSQLPORT}/${ENV=MYSQLDATABASE}?zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&allowPublicKeyRetrieval=true" mysql_ferreteria_juankPool
+create-jdbc-connection-pool --datasourceclassname com.mysql.cj.jdbc.MysqlDataSource --restype javax.sql.DataSource --property serverName=${ENV.MYSQLHOST}:portNumber=${ENV.MYSQLPORT}:databaseName=${ENV.MYSQLDATABASE}:User=${ENV.MYSQLUSER}:Password=${ENV.MYSQLPASSWORD}:URL="jdbc\:mysql\://${ENV.MYSQLHOST}\:${ENV.MYSQLPORT}/${ENV.MYSQLDATABASE}?zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&allowPublicKeyRetrieval=true" mysql_ferreteria_juankPool
 
 create-jdbc-resource --connectionpoolid mysql_ferreteria_juankPool pooljcFerreteria
 create-jdbc-resource --connectionpoolid mysql_ferreteria_juankPool java:app/Ferreteria
