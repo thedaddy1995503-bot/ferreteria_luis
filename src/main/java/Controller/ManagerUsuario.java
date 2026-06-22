@@ -58,7 +58,21 @@ public class ManagerUsuario implements Serializable{
     
     public String login(){
         UsuarioSeleccionado=null;
-        String u = this.nomUsuario; 
+        
+        if (this.nomUsuario == null || this.nomUsuario.trim().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El usuario es obligatorio."));
+            return null;
+        }
+        
+        // SEGURIDAD: Evitar espacios en blanco en el usuario (medida anti-phishing / suplantación)
+        if (this.nomUsuario.contains(" ")) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Seguridad", "El usuario no puede contener espacios en blanco."));
+            return null;
+        }
+        
+        String u = this.nomUsuario.trim(); 
         String c = this.contras;
         String valor=null;
         System.out.println("Entro");
@@ -67,12 +81,20 @@ public class ManagerUsuario implements Serializable{
         if (UsuarioSeleccionado!=null){
              valor= "dashboard?faces-redirect=true";
              FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Cliente encontrado correctamente."));
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario autenticado correctamente."));
              System.out.println("el cliente encontrado"+UsuarioSeleccionado.getNombre_completo());
         }else{
             valor= null;
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Usuario o contraseña incorrectos."));
         }
         return valor;
+    }
+
+    // Método para cerrar sesión de forma segura
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "index?faces-redirect=true";
     }
 
     public List<Usuario> getListaUsuario() {

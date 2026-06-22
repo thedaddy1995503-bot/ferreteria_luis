@@ -29,11 +29,16 @@
         validate-atmost-once-period-in-seconds="0" 
         wrap-jdbc-objects="false">
         
-        <property name="Url" value="jdbc:mysql://yamanote.proxy.rlwy.net:37964/railway?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"/>
-        <property name="User" value="root"/>
-        <property name="Password" value="PhnYGxlujFuneaicPqTKIrLzNTpBlLGN"/>
+        <property name="serverName" value="${ENV=MYSQLHOST:yamanote.proxy.rlwy.net}"/>
+        <property name="portNumber" value="${ENV=MYSQLPORT:37964}"/>
+        <property name="databaseName" value="${ENV=MYSQLDATABASE:railway}"/>
+        <property name="User" value="${ENV=MYSQLUSER:root}"/>
+        <property name="Password" value="${ENV=MYSQLPASSWORD:PhnYGxlujFuneaicPqTKIrLzNTpBlLGN}"/>
+        <property name="URL" value="jdbc:mysql://${ENV=MYSQLHOST:yamanote.proxy.rlwy.net}:${ENV=MYSQLPORT:37964}/${ENV=MYSQLDATABASE:railway}?zeroDateTimeBehavior=CONVERT_TO_NULL&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"/>
+        <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
     </jdbc-connection-pool>
 
+    <jdbc-resource enabled="true" jndi-name="pooljcFerreteria" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
     <jdbc-resource enabled="true" jndi-name="java:app/Ferreteria" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
     <jdbc-resource enabled="true" jndi-name="java:app/mysql_ferreteria_juankPool" object-type="user" pool-name="mysql_ferreteria_juankPool"/>
     <jdbc-resource enabled="true" jndi-name="pooljcFerreteria__pm" object-type="user" pool-name="mysql_ferreteria_juankPool"/>

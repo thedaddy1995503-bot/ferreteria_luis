@@ -14,10 +14,9 @@
 
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 -->
-<glassfish-web-app xmlns="http://glassfish.org/schema/glassfish-web-app" 
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-                   xsi:schemaLocation="http://glassfish.org/schema/glassfish-web-app http://glassfish.org/schema/glassfish-web-app/glassfish-web-app_3_0-1.xsd">
-  <class-loader delegate="false"/>
+<!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
+<glassfish-web-app error-url="">
+  <class-loader delegate="true"/>
   <jsp-config>
     <property name="keepgenerated" value="true">
       <description>Keep a copy of the generated servlet class' java code.</description>
