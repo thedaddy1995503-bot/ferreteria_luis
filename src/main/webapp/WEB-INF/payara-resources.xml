@@ -2,7 +2,7 @@
 <!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_3_1.dtd">
 <resources>
     <jdbc-connection-pool 
-        allow-non-component-callers="false" 
+        allow-non-component-callers="true" 
         associate-with-thread="false" 
         connection-creation-retry-attempts="0" 
         connection-creation-retry-interval-in-seconds="10" 
