@@ -27,26 +27,23 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
    
     @Override
     public Usuario login(String nombre, String contra) {
-      // NOTA: Asume que los atributos de tu clase Usuario son 'nombreUsuario' y 'clave'.
+        System.out.println("[UsuarioFacade] Iniciando intento de login para el usuario: " + nombre);
         try {
-            // 1. Usa JPQL (SELECT u FROM Entidad)
-            // 2. Usa el alias correcto (u.nombreUsuario)
-            // 3. Retorna un solo resultado
-            return  em.createQuery(
+            Usuario usuario = em.createQuery(
                     "SELECT u FROM Usuario u WHERE u.nombre_usuario = :nomUsuario AND u.clave = :contra", Usuario.class)
-                    // Asigna los parámetros
                     .setParameter("nomUsuario", nombre)
                     .setParameter("contra", contra)
-                    // Retorna un único objeto Usuario o lanza NoResultException si no encuentra nada
                     .getSingleResult();
-
+            
+            System.out.println("[UsuarioFacade] CONEXION EXITOSA. Usuario encontrado: " + usuario.getNombre_usuario() + " (Nombre: " + usuario.getNombre_completo() + ", Rol: " + usuario.getRol() + ")");
+            return usuario;
         } catch (jakarta.persistence.NoResultException e) {
-            // Si no se encuentra el usuario, retorna null (ideal para un login)
+            System.out.println("[UsuarioFacade] BD respondio correctamente: No se encontro ningun usuario con esas credenciales.");
             return null;
         } catch (Exception e) {
-            // Manejo de errores de la BD
+            System.err.println("[UsuarioFacade] ERROR DE CONEXION O BD (Railway): " + e.getMessage());
             e.printStackTrace();
-            return null;
+            throw new RuntimeException("Error al conectar o consultar la base de datos en Railway: " + e.getMessage(), e);
         }
     }
 

@@ -11,6 +11,9 @@ FROM payara/server-full:6.2025.1-jdk17
 # Copiamos el conector de MySQL desde la etapa de construcción a las librerías del dominio de Payara
 COPY --chown=payara:payara --from=builder /root/.m2/repository/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar /opt/payara/appserver/glassfish/domains/domain1/lib/
 
+# Copiar el archivo de comandos asadmin para configurar los recursos (Pool de conexiones y Data Source)
+COPY --chown=payara:payara glassfish-resources.asadmin $POSTBOOT_COMMANDS
+
 # Copiar el archivo .war para su despliegue como aplicación principal (ROOT.war) en el autodeploy del dominio
 COPY --chown=payara:payara --from=builder /app/target/FerreteriaLuis-1.0-SNAPSHOT.war /opt/payara/appserver/glassfish/domains/domain1/autodeploy/ROOT.war
 

@@ -75,18 +75,42 @@ public class ManagerUsuario implements Serializable{
         String u = this.nomUsuario.trim(); 
         String c = this.contras;
         String valor=null;
-        System.out.println("Entro");
-        UsuarioSeleccionado=UsuarioFCL.login(u, c);
         
-        if (UsuarioSeleccionado!=null){
-             valor= "dashboard?faces-redirect=true";
-             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario autenticado correctamente."));
-             System.out.println("el cliente encontrado"+UsuarioSeleccionado.getNombre_completo());
-        }else{
-            valor= null;
+        System.out.println("[ManagerUsuario] Recibida peticion de login. Usuario: " + u);
+        
+        try {
+            UsuarioSeleccionado=UsuarioFCL.login(u, c);
+            
+            if (UsuarioSeleccionado!=null){
+                 // REGISTRO EN LA SESIÓN: Guardamos explícitamente esta instancia en el mapa de sesión 
+                 // para que el SecurityFilter (que busca en la sesión HTTP estándar) pueda validar el login.
+                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("ManagerUsuario", this);
+                 
+                 valor= "dashboard?faces-redirect=true";
+                 FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Usuario autenticado correctamente."));
+                 System.out.println("[ManagerUsuario] Login EXITOSO. Usuario encontrado: " + UsuarioSeleccionado.getNombre_completo() + " [Rol: " + UsuarioSeleccionado.getRol() + "]");
+            }else{
+                valor= null;
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Usuario o contraseña incorrectos."));
+                System.out.println("[ManagerUsuario] Login FALLIDO. Credenciales incorrectas para el usuario: " + u);
+            }
+        } catch (Exception e) {
+            valor = null;
+            // Capturar la causa raiz del error de la base de datos (por ejemplo, si esta caida la conexion a Railway)
+            Throwable cause = e;
+            while (cause.getCause() != null) {
+                cause = cause.getCause();
+            }
+            String mensajeDetallado = "Error al conectar con la base de datos (Railway): " + cause.getMessage();
+            
+            System.err.println("[ManagerUsuario] ERROR CRITICO al invocar EJB: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Mostrar en el Front-End (p:growl) el mensaje detallado para depuracion
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Usuario o contraseña incorrectos."));
+                    new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error de Backend (Railway)", mensajeDetallado));
         }
         return valor;
     }
