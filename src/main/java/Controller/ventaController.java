@@ -115,7 +115,9 @@ public class ventaController implements Serializable {
     }
 
     public List<Ventas> getListaVentas() {
-        this.listaVentas = ventaFCL.obtenerVentasConCliente();
+        if (this.listaVentas == null) {
+            this.listaVentas = ventaFCL.obtenerVentasConCliente();
+        }
         return listaVentas;
     }
 
@@ -216,6 +218,7 @@ public class ventaController implements Serializable {
     public void actualizarVenta(Ventas v) {
         try {
             ventaFCL.edit(v);
+            this.listaVentas = null;
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Estado de venta actualizado."));
         } catch (Exception e) {

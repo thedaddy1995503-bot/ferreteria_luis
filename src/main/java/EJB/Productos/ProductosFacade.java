@@ -125,4 +125,18 @@ public class ProductosFacade extends AbstractFacade<Productos> implements Produc
         }
     }
 
+    @Override
+    public Double calcularTotalInversion() {
+        try {
+            Double total = em.createQuery(
+                    "SELECT COALESCE(SUM(p.stock * p.precio_compra), 0.0) FROM Productos p WHERE p.stock > 0 AND p.precio_compra IS NOT NULL",
+                    Double.class)
+                    .getSingleResult();
+            return total != null ? total : 0.0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0.0;
+        }
+    }
+
 }

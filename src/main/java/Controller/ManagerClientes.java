@@ -85,7 +85,9 @@ public class ManagerClientes implements Serializable {
     }
 
     public List<Clientes> getListaClientes() {
-        this.ListaClientes = clienteFCL.findAll();
+        if (this.ListaClientes == null) {
+            this.ListaClientes = clienteFCL.findAll();
+        }
         return ListaClientes;
     }
 
@@ -110,8 +112,7 @@ public class ManagerClientes implements Serializable {
     }
 
     public List<Clientes> getResultadosBusqueda() {
-        this.ListaClientes = clienteFCL.listarPrimeros10();
-        return ListaClientes;
+        return resultadosBusqueda;
     }
 
     public void setResultadosBusqueda(List<Clientes> resultadosBusqueda) {
@@ -133,6 +134,7 @@ public class ManagerClientes implements Serializable {
                 this.mensaje = "clientes '" + clientes.getNombres() + "' ya existente.";
             } else {
                 clienteFCL.create(clientes);
+                this.ListaClientes = null;
                 System.out.println("Cliente creado correctamente");
                 this.mensaje = "clientes creado correctamente";
                 FacesContext.getCurrentInstance().addMessage(null,

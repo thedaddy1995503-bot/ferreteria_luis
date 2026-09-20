@@ -122,7 +122,9 @@ public class ManagerUsuario implements Serializable{
     }
 
     public List<Usuario> getListaUsuario() {
-        this.ListaUsuario=UsuarioFCL.findAll();
+        if (this.ListaUsuario == null) {
+            this.ListaUsuario = UsuarioFCL.findAll();
+        }
         return ListaUsuario;
     }
 

@@ -43,7 +43,7 @@ public class DetalleVentaFacade extends AbstractFacade<DetalleVenta> implements 
     @Override
     public List<DetalleVenta> obtenerTodosConProductos() {
         TypedQuery<DetalleVenta> query = em.createQuery(
-                "SELECT d FROM DetalleVenta d JOIN FETCH d.producto JOIN FETCH d.venta",
+                "SELECT d FROM DetalleVenta d JOIN FETCH d.producto",
                 DetalleVenta.class);
         return query.getResultList();
     }

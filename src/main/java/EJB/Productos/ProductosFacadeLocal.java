@@ -41,4 +41,6 @@ public interface ProductosFacadeLocal {
 
     List<Productos> listarPrimeros10();
 
+    Double calcularTotalInversion();
+
 }

@@ -94,7 +94,9 @@ public class ManagerProductos implements Serializable {
 
     // variables para dashboard
     private Double totalInversion;
+    private Double totalGanancias;
     private BarChartModel barModel;
+    private List<Medida> listaMedidas;
 
     public Double getTotalInversion() {
         return totalInversion;
@@ -209,12 +211,16 @@ public class ManagerProductos implements Serializable {
     }
 
     public List<Medida> getListaMedidas() {
-        return medidaFCL.findAll();
+        if (this.listaMedidas == null) {
+            this.listaMedidas = medidaFCL.findAll();
+        }
+        return this.listaMedidas;
     }
 
     public List<Productos> getListaProductos() {
-        this.ListaProductos = ProductoFCL.findAll();
-        // this.resultadosBusqueda=ProductoFCL.findAll();
+        if (this.ListaProductos == null) {
+            this.ListaProductos = ProductoFCL.findAll();
+        }
         return ListaProductos;
     }
 
@@ -255,6 +261,7 @@ public class ManagerProductos implements Serializable {
             System.err.println("Error al cargar estadísticas: " + e.getMessage());
         }
         
+        calcularTotalGanancias();
         calcularTotalInversion();
         crearModeloBarras();
     }
@@ -262,14 +269,7 @@ public class ManagerProductos implements Serializable {
     private void calcularTotalInversion() {
         this.totalInversion = 0.0;
         try {
-            List<Productos> todos = ProductoFCL.findAll();
-            if (todos != null) {
-                for (Productos p : todos) {
-                    if (p.getStock() != null && p.getPrecio_compra() != null && p.getStock() > 0) {
-                        this.totalInversion += (p.getStock() * p.getPrecio_compra());
-                    }
-                }
-            }
+            this.totalInversion = ProductoFCL.calcularTotalInversion();
         } catch (Exception e) {
             System.err.println("Error al calcular total inversión: " + e.getMessage());
         }
@@ -374,6 +374,7 @@ public class ManagerProductos implements Serializable {
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Producto nuevo guardado correctamente."));
             }
             
+            this.ListaProductos = null; // invalidar cache para recarga fresca
             productos = new Productos(); // limpiar formulario
             mostrarCamposHierro = false; // limpiar variable
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
@@ -510,7 +511,7 @@ public class ManagerProductos implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo actualizar el producto."));
         }
         codigoBusqueda = "";
-        resultadosBusqueda = ProductoFCL.findAll();
+        resultadosBusqueda = ProductoFCL.listarPrimeros10();
 
     }
 
@@ -520,7 +521,7 @@ public class ManagerProductos implements Serializable {
         // this.resultadosBusqueda = new ArrayList<>();
         if (codigoBusqueda == null || codigoBusqueda.trim().length() < 3) {
             // Limpia la lista si el texto es muy corto o vacío
-            this.resultadosBusqueda = ProductoFCL.findAll();
+            this.resultadosBusqueda = ProductoFCL.listarPrimeros10();
             return;
         }
 
@@ -831,7 +832,7 @@ public class ManagerProductos implements Serializable {
         return (total != null) ? total : 0.0;
     }
 
-    public Double getTotalGanancias() {
+    public void calcularTotalGanancias() {
         Double totalGanancia = 0.0;
         try {
             List<DetalleVenta> detalles = detalleventaFL.obtenerTodosConProductos();
@@ -860,7 +861,14 @@ public class ManagerProductos implements Serializable {
         } catch (Exception e) {
             System.err.println("Error al calcular ganancias: " + e.getMessage());
         }
-        return Math.round(totalGanancia * 100.0) / 100.0;
+        this.totalGanancias = Math.round(totalGanancia * 100.0) / 100.0;
+    }
+
+    public Double getTotalGanancias() {
+        if (this.totalGanancias == null) {
+            calcularTotalGanancias();
+        }
+        return (this.totalGanancias != null) ? this.totalGanancias : 0.0;
     }
 
     public void buscarProdNombre() {
