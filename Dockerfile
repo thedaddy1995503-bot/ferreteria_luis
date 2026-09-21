@@ -5,8 +5,11 @@ WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# === ETAPA 2: Servidor de Aplicaciones ===
-FROM payara/server-full:6.2025.1-jdk17
+# === ETAPA 2: Servidor de Aplicaciones (Web Profile ligero para 2 usuarios) ===
+FROM payara/server-web:6.2025.1-jdk17
+
+# Configurar limites de memoria JVM optimizados para 2 usuarios (~600-800MB consumo total)
+ENV JDK_JAVA_OPTIONS="-Xms128m -Xmx512m -XX:MaxMetaspaceSize=192m -XX:+UseG1GC -XX:+UseStringDeduplication"
 
 # Copiamos el conector de MySQL desde la etapa de construcción a las librerías del dominio de Payara
 COPY --chown=payara:payara --from=builder /root/.m2/repository/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar /opt/payara/appserver/glassfish/domains/domain1/lib/
