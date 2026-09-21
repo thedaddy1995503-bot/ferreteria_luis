@@ -8,7 +8,8 @@ RUN mvn clean package -DskipTests
 # === ETAPA 2: Servidor de Aplicaciones (Web Profile ligero para 2 usuarios) ===
 FROM payara/server-web:6.2025.1-jdk17
 
-# Configurar limites de memoria JVM optimizados para 2 usuarios (~600-800MB consumo total)
+# Configurar limites de memoria JVM optimizados para 2 usuarios (Heap maximo 512MB)
+ENV JVM_ARGS="-Xms128m -Xmx512m -XX:MaxMetaspaceSize=192m -XX:+UseG1GC -XX:+UseStringDeduplication"
 ENV JDK_JAVA_OPTIONS="-Xms128m -Xmx512m -XX:MaxMetaspaceSize=192m -XX:+UseG1GC -XX:+UseStringDeduplication"
 
 # Copiamos el conector de MySQL desde la etapa de construcción a las librerías del dominio de Payara
