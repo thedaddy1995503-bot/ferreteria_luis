@@ -8,9 +8,9 @@ RUN mvn clean package -DskipTests
 # === ETAPA 2: Servidor de Aplicaciones (Web Profile ligero para 2 usuarios) ===
 FROM payara/server-web:6.2025.1-jdk17
 
-# Configurar limites de memoria JVM optimizados para 2 usuarios (Heap maximo 512MB)
-ENV JVM_ARGS="-Xms128m -Xmx512m -XX:MaxMetaspaceSize=192m -XX:+UseG1GC -XX:+UseStringDeduplication"
-ENV JDK_JAVA_OPTIONS="-Xms128m -Xmx512m -XX:MaxMetaspaceSize=192m -XX:+UseG1GC -XX:+UseStringDeduplication"
+# Configurar limites de memoria JVM optimizados para 2 usuarios (Heap 384MB, Metaspace 160MB, JIT liviano)
+ENV JVM_ARGS="-Xms96m -Xmx384m -XX:MaxMetaspaceSize=160m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:CICompilerCount=2"
+ENV JDK_JAVA_OPTIONS="-Xms96m -Xmx384m -XX:MaxMetaspaceSize=160m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:CICompilerCount=2"
 
 # Copiamos el conector de MySQL desde la etapa de construcción a las librerías del dominio de Payara
 COPY --chown=payara:payara --from=builder /root/.m2/repository/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar /opt/payara/appserver/glassfish/domains/domain1/lib/

@@ -2,3 +2,5 @@ create-jdbc-connection-pool --datasourceclassname com.mysql.cj.jdbc.MysqlDataSou
 
 create-jdbc-resource --connectionpoolid mysql_ferreteria_juankPool pooljcFerreteria
 create-jdbc-resource --connectionpoolid mysql_ferreteria_juankPool pooljcFerreteria__pm
+
+set-hazelcast-configuration --enabled=false --dynamic=true
